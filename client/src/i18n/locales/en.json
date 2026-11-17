@@ -1,0 +1,32 @@
+{
+  "app": {
+    "name": "LeakGuard",
+    "tagline": "Find leaked tokens, passwords and configuration files in your GitHub repositories before someone else does."
+  },
+  "layout": {
+    "mainNavigation": "Main navigation",
+    "language": "Language",
+    "footer": "LeakGuard — secret leak detection for student and team projects"
+  },
+  "health": {
+    "title": "System status",
+    "checking": "Checking…",
+    "unavailable": "The API is unavailable",
+    "overall": {
+      "ok": "All systems operational",
+      "error": "Some services are unavailable"
+    },
+    "dependency": {
+      "database": "Database",
+      "redis": "Queue (Redis)"
+    },
+    "state": {
+      "up": "Up",
+      "down": "Down"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Back to home"
+  }
+}
