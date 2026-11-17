@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+/* Dark mode follows the `dark` class on <html>, so it can be toggled from the UI later. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "leakguard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Web system for detecting leaked secrets in Git repositories",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "workspaces": [
+    "packages/shared",
+    "packages/detector",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "build:packages": "npm run build -w @leakguard/shared -w @leakguard/detector",
+    "build": "npm run build --workspaces",
+    "dev": "npm run build:packages && concurrently -k -n shared,detector,api,worker,client -c gray,magenta,blue,cyan,green \"npm:dev -w @leakguard/shared\" \"npm:dev -w @leakguard/detector\" \"npm:dev -w @leakguard/server\" \"npm:dev:worker -w @leakguard/server\" \"npm:dev -w @leakguard/client\"",
+    "lint": "oxlint --type-aware",
+    "typecheck": "npm run build:packages && npm run typecheck --workspaces",
+    "test": "npm run build:packages && npm run test --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^5.1.0",
+    "concurrently": "^10.0.7",
+    "oxlint": "^1.93.0",
+    "oxlint-tsgolint": "^7.0.2007",
+    "prettier": "^3.10.1",
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.0"
+  }
+}

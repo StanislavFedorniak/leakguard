@@ -1,0 +1,8 @@
+{
+  // Used only by `npm run dev:worker`: a separate output directory keeps the
+  // worker's watch build from clashing with the API's watch build in dist/.
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": "dist-worker"
+  }
+}

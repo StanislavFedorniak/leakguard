@@ -1,0 +1,45 @@
+{
+  "name": "@leakguard/server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LeakGuard API and scan worker",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch --preserveWatchOutput",
+    "dev:worker": "nest start --watch --preserveWatchOutput --entryFile worker --path tsconfig.worker.json",
+    "start": "node --enable-source-maps dist/main.js",
+    "start:worker": "node --enable-source-maps dist/worker.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "migration:generate": "npm run build && typeorm migration:generate -d dist/database/data-source.js",
+    "migration:run": "typeorm migration:run -d dist/database/data-source.js",
+    "migration:revert": "typeorm migration:revert -d dist/database/data-source.js"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^12.0.13",
+    "@nestjs/testing": "^12.5.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.6"
+  },
+  "dependencies": {
+    "@leakguard/shared": "0.1.0",
+    "@nestjs/bullmq": "^12.0.2",
+    "@nestjs/common": "^12.5.1",
+    "@nestjs/config": "^12.1.1",
+    "@nestjs/core": "^12.5.1",
+    "@nestjs/platform-express": "^12.5.1",
+    "@nestjs/typeorm": "^12.0.3",
+    "bullmq": "^6.7.7",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
+    "ioredis": "^6.0.0",
+    "pg": "^8.23.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "typeorm": "^1.1.3"
+  }
+}

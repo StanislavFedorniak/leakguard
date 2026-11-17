@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    // No Node.js or DOM typings on purpose: the engine must stay platform-neutral
+    // so that the same code runs in the worker and in the browser.
+    "types": []
+  },
+  "include": ["src", "test", "vitest.config.ts"]
+}
