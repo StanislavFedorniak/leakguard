@@ -1,6 +1,7 @@
 import { isIgnoredByDefault, keywordSignal, pathSignals, placeholderSignal } from './context.js';
 import type { PathSignals } from './context.js';
 import { entropySignal, shannonEntropy } from './entropy.js';
+import { IgnoreMatcher } from './ignore.js';
 import { buildLineIndex, locate } from './line-index.js';
 import { maskSecret } from './mask.js';
 import { BUILTIN_RULES } from './rules/builtin.js';
@@ -43,6 +44,11 @@ export interface Detector {
   scan(input: ScanInput): ScanResult;
   /** Rules that are active with the given options. */
   readonly rules: readonly RuleDefinition[];
+  /**
+   * True when the path is skipped by default (vendored code, lock files) or by the
+   * configured ignore patterns. Lets callers avoid downloading such files at all.
+   */
+  isIgnored(path: string): boolean;
 }
 
 function compile(rule: RuleDefinition): CompiledRule {
@@ -124,6 +130,8 @@ export function resolveOverlaps(candidates: readonly Candidate[]): Candidate[] {
  */
 export function createDetector(options: DetectorOptions = {}): Detector {
   const disabled = new Set(options.disabledRuleIds ?? []);
+  const ignore = IgnoreMatcher.fromPatterns(options.ignorePatterns ?? []);
+  const isIgnored = (path: string): boolean => isIgnoredByDefault(path) || ignore.isIgnored(path);
   const rules = [
     ...BUILTIN_RULES.filter((rule) => !disabled.has(rule.id)),
     ...(options.customRules ?? []),
@@ -189,7 +197,7 @@ export function createDetector(options: DetectorOptions = {}): Detector {
 
   function scan(input: ScanInput): ScanResult {
     const { path, content } = input;
-    if (isIgnoredByDefault(path)) {
+    if (isIgnored(path)) {
       return { detections: [], skipped: 'ignored-path', skippedLongLines: 0 };
     }
     if (content.length > maxContentLength) {
@@ -242,7 +250,7 @@ export function createDetector(options: DetectorOptions = {}): Detector {
     return { detections: resolveOverlaps(candidates), skipped: null, skippedLongLines };
   }
 
-  return { scan, rules };
+  return { scan, rules, isIgnored };
 }
 
 /** Convenience wrapper for one-off scans (e.g. the "Check text" page). */
