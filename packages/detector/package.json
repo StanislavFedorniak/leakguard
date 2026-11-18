@@ -21,5 +21,8 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage --passWithNoTests"
+  },
+  "dependencies": {
+    "@leakguard/shared": "0.1.0"
   }
 }
