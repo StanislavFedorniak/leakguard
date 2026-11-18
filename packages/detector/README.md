@@ -77,6 +77,45 @@ Custom rules are validated by `compileCustomRule`, which rejects invalid syntax,
 patterns that match the empty string, and patterns prone to catastrophic
 backtracking (nested quantifiers, backreferences).
 
+## Findings: fingerprinting and deduplication
+
+```ts
+import { groupDetections } from '@leakguard/detector';
+
+const candidates = groupDetections(located, {
+  // Server: HMAC-SHA256(secret, FINGERPRINT_PEPPER). Browser: createLocalFingerprinter().
+  fingerprinter,
+  suppressedFingerprints, // fingerprints marked as false_positive
+});
+```
+
+- `normalizeSecret` trims single-line values and strips all whitespace from multi-line
+  ones (PEM bodies are wrapped differently in different files).
+- The fingerprint depends **only on the secret**, so one key in many files, commits or
+  under different rules becomes one `FindingCandidate` with many occurrences.
+  Rule, severity, score and preview come from the strongest occurrence.
+- Suppressed fingerprints are kept with `suppressed: true`. The caller records the
+  occurrence but does not reopen the finding or alert.
+- `createLocalFingerprinter()` is FNV-1a 64-bit for in-browser grouping only. It is
+  unkeyed and must not be stored.
+
+## Ignore paths
+
+`IgnoreMatcher` implements `.gitignore` syntax without dependencies: `*`, `?`, `[...]`,
+`**`, anchoring with `/`, directory-only patterns, `!` negation, and escapes. The last
+matching rule wins, and nothing inside an ignored directory can be re-included.
+`createDetector({ ignorePatterns })` uses it for user ignore paths, and
+`detector.isIgnored(path)` lets callers skip downloading such files.
+
+## Configuration files
+
+- `findCommittedSensitiveFiles(paths)` reports committed `.env*` files (except templates
+  such as `.env.example`), private keys, credentials files and Terraform state. Files
+  under test or example paths are reported as `low`.
+- `checkGitignore(rootGitignore, paths)` reports kinds of sensitive files that the root
+  `.gitignore` does not cover, with suggested lines. `.env` is always expected. Nested
+  `.gitignore` files are not considered.
+
 ## Tests
 
 ```sh

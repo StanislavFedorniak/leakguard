@@ -53,3 +53,27 @@ export {
   scanText,
 } from './scanner.js';
 export type { Detector } from './scanner.js';
+export { createLocalFingerprinter, fingerprintSecret, normalizeSecret } from './fingerprint.js';
+export type { Fingerprinter } from './fingerprint.js';
+export { groupDetections, severityRank } from './findings.js';
+export type {
+  FindingCandidate,
+  FindingOccurrence,
+  GroupOptions,
+  LocatedDetection,
+} from './findings.js';
+export {
+  globToRegexSource,
+  IgnoreMatcher,
+  MAX_IGNORE_PATTERN_LENGTH,
+  parseIgnoreLine,
+  toRepoPath,
+  validateIgnorePattern,
+} from './ignore.js';
+export type { IgnoreOptions, IgnorePatternError, IgnoreRule } from './ignore.js';
+export {
+  checkGitignore,
+  classifySensitiveFile,
+  findCommittedSensitiveFiles,
+} from './config-files.js';
+export type { ConfigFileIssue, ConfigIssueKind, SensitiveFileKind } from './config-files.js';

@@ -115,6 +115,8 @@ export interface ScanResult {
 export interface DetectorOptions {
   /** Built-in rule identifiers to switch off. */
   readonly disabledRuleIds?: readonly string[];
+  /** User-defined ignore paths in `.gitignore` syntax (see `IgnoreMatcher`). */
+  readonly ignorePatterns?: readonly string[];
   /** Additional rules, typically compiled with `compileCustomRule`. */
   readonly customRules?: readonly RuleDefinition[];
   readonly weights?: Partial<ScoringWeights>;
